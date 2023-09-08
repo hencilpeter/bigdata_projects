@@ -1,0 +1,11 @@
+1. How to support new columns, column name change, drop existing columns ?
+2. How the housekeeping logic implemented?
+3. How to enable backloading?
+4. Does the Data Lake require historical data migration?
+5. How do you grant table/database access to the users?
+6. Implement Different type of data loads: Transaction, Delta and Master 
+7. organize the folder structure (use right partition) 
+8. how to query all active records? and, change history? 
+9. scheduler jobs to trigger the data ingestion 
+10. reconciliation module 
+11. data quality checker 
