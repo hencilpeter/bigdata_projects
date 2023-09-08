@@ -10,3 +10,9 @@
 10. reconciliation module 
 11. data quality checker 
 12. How the alert mechanism implemented?
+13. log module 
+14. unit testing 
+15. CI/CD pipeline 
+16. Kerberos authentication 
+17. file level data load enable/disable feature 
+16. backup mechanism for raw files 
