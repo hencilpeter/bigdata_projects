@@ -9,3 +9,4 @@
 9. scheduler jobs to trigger the data ingestion 
 10. reconciliation module 
 11. data quality checker 
+12. How the alert mechanism implemented?
