@@ -1,0 +1,14 @@
+common:
+  target_path: E:\temp\
+
+sql_server_database:
+  host_name: DESKTOP-E3UH19M
+  port: 1440
+  database: BankProjectDB
+  schema: dbo
+  user: dbuser
+  password: Test1234
+
+table_list:
+  - account
+  - card
