@@ -1,9 +1,6 @@
-import os.path
+import pyodbc
 
 from config.config_manager import ConfigurationManager
-
-import pyodbc
-import csv
 
 
 class SQLDataReader:
@@ -31,16 +28,16 @@ class SQLDataReader:
     #     #return connection
 
     def get_connection(self):
-        connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={self.host_name};DATABASE={self.database};UID={self.dbuser};PWD={self.password}'
-        conn = pyodbc.connect(connectionString)
+        connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={self.host_name};DATABASE={self.database};UID={self.dbuser};PWD={self.password}'
+        conn = pyodbc.connect(connection_string)
         return conn
 
-    def extract_and_write_data(self, table_name, target_path):
-
+    def get_table_data(self, table_name):
         result = self.cursor.execute(f'SELECT * FROM {table_name}')
 
-        with open(os.path.join(target_path, table_name + ".csv"), 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([column[0] for column in self.cursor.description])  # column headers
-            for row in result:
-                writer.writerow(row)
+        header = [column[0] for column in self.cursor.description]
+        data = [','.join(header) + "\r"]
+        for row in result:
+            data.append(','.join(row) + "\r")
+
+        return data
