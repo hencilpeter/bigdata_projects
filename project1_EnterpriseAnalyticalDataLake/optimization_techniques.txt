@@ -1,0 +1,59 @@
+1. partitioning or buckting
+2. caching
+3. Enable AQE
+4. Join Stategies(Broadcast hash join(when one of the file is smaller >10mb),Sort merge join(when we disable the auto broadcast),
+suffle hash(little expensive because will create hash table of smaller table instead of sorting(order.join(cust.hint("suffle_hash),joininkeys,"inner")))
+5. hash aggregate is faster than the sort aggregate(will try to sort on integer datatype rather thn string in aggregate query)
+6. If we have two large file and want to perform the join can do buckting on both the files
+
+(a) optimization techniques (source :https://lnkd.in/gfDuHT5t ) 
+1. Choose the Right Storage Format
+2. Partition Data Effectively
+3. Use Broadcast Variables
+4. Use DataFrames and Datasets
+5. Use the Right Data Serialization Format
+6. Use Caching and Persistence
+7. Use the Right Join Strategy
+8. Use the Right Executor Memory Settings
+9. Use the Right Shuffle Settings
+10. Monitor and Optimize Resource Usage
+11. Use Lazy Evaluation
+12. Use Shuffle Tuning
+13. Use Dynamic Allocation
+14. Use Cluster Management Tools
+
+(b) (source : https://lnkd.in/geskgY8Z ) 
+1. Don’t Collect Data
+2. Persistence is the Key
+3. Avoid Groupbykey
+4. Aggregate with Accumulators
+5. Broadcast Large Variables
+6. Be shrewd with Partitioning
+7. Repartition your data
+8. Don’t Repartition your data – Coalesce it
+
+(c) source : https://www.xenonstack.com/blog/apache-spark-optimisation
+best practices 
+1. ReduceByKey or groupByKey
+2. Maintain the required size of the shuffle blocks
+3. File Formats and Delimiters
+4. Small Data Files
+5. No Monitoring of Job Stages
+6. ByKey, repartition or any other operations which trigger shuffles
+7. Reinforcement Learning
+- Using Accumulators
+- Hive Bucketing Performance
+- Predicate Pushdown Optimization
+- Zero Data Serialization / Deserialization using Apache Arrow
+- Garbage Collection Tuning using G1GC Collection
+- Memory Management and Tuning
+- Data Locality
+- Using Collocated Joins
+- Caching in Spark
+- Executor Size
+- Spark Windowing Function
+- Watermarks Techniques
+- Data Serialization
+
+(d) source : https://lnkd.in/gECJy9cs
+The 5 Ss (Spill, Skew, Shuffle, Storage, Serialization)
