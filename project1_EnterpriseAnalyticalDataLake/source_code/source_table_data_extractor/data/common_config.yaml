@@ -12,3 +12,4 @@ sql_server_database:
 table_list:
   - account
   - card
+  - orders
