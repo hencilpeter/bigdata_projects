@@ -1,8 +1,5 @@
-from  validator.control_file_existence_validator import ControlFileExistenceValidator
-#from factory.validation_handler_factory import ValidationHandlerFactory
+from util.landing_files_processor import LandingFilesProcessor
 
 if __name__ == '__main__':
-    ControlFileExistenceValidator()
-    #validation_handler = ValidationHandlerFactory.get_validation_handler_chain()
-    pass
-    #validation_handler.validate()
+    landing_files_processor = LandingFilesProcessor(landing_path="E:\\temp\\20230918\\")
+    landing_files_processor.process()
