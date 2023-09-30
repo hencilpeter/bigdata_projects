@@ -1,0 +1,38 @@
+create database hp_config;
+create database hp_optimization;
+create database hp_audit;
+create database hp_data_stage;
+create database hp_data_core;
+
+
+1. config.staging_to_core
+=========================
+CREATE TABLE  IF NOT EXISTS hp_config.staging_to_core(id int, source_application string, filename string,source_hdfs_path string, source_table string, target_hdfs_path string, target_table string, data_load_type string, should_add_partition int, is_active int, create_timestamp timestamp , created_by string, update_timestamp timestamp, updated_by string) STORED AS PARQUET  PARTITIONED BY(source_application );
+
+2. config.optimization
+======================
+CREATE TABLE  IF NOT EXISTS hp_config.optimization(id int, optimization_category string, optimization_sub_category	string, optimization_name	string, description	string, is_active	int,create_timestamp timestamp, created_by	string	,update_timestamp timestamp, updated_by string) STORED AS PARQUET PARTITIONED BY (optimization_category);
+
+
+3. optimization.taging_to_core
+==============================
+CREATE TABLE  IF NOT EXISTS hp_optimization.staging_to_core(id int,table_name	string,optimization_name string,parameter_name string,parameter_value string,is_active int ,create_timestamp timestamp,created_by  string,update_timestamp timestamp,updated_by string) STORED AS PARQUET  PARTITIONED BY(table_name);
+
+4. audit.staging_to_core
+========================
+CREATE TABLE  IF NOT EXISTS hp_audit.staging_to_core(id int,source_application string,filename_body string,audit_category string,status string,audit_data string,audit_date date,audit_timestamp timestamp) STORED AS PARQUET  PARTITIONED BY(audit_date, source_application );
+
+5. staging data tables
+======================
+hp_stage.
+
+
+6. core data tables 
+======================
+hp_core
+
+
+default
+
+
+

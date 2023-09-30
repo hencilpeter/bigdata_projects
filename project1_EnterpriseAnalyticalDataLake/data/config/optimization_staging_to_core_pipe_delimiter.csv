@@ -1,0 +1,3 @@
+1|hp_core.account|add_column_with_default_value|{created_by: 'system'}|1|current_timestamp()|system|current_timestamp()|system
+2|hp_core.account|add_column_with_current_timestamp|{dataload_timestamp: 'created_by'}|1|current_timestamp()|system|current_timestamp()|system
+3|hp_core.account|capitalize_word|[frequency]|1|current_timestamp()|system|current_timestamp()|system

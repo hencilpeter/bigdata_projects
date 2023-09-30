@@ -1,0 +1,162 @@
+data_transformation
+data_manipulation
+==================
+drop_exact_duplicate_records
+drop_records_when_column_value
+filter_record
+
+add_column
+rename_column
+drop_column 
+replace_column_value
+cast_column_type (from to ) 
+
+
+Transformation 
+CapitalizeWordTransformation 
+NumberTransformationRuleImpl.scala
+DateTransformationRuleImpl.scala
+
+a.Handlingduplicates
+b.DealingwithNullvalues
+c.HandlingMissingValues
+d.ChangingDatatypes
+
+
+
+
+steps :
+1. develop a quick prototype 
+2. make it production ready 
+3. improve the performance 
+
+/usr/bin/python3.6 validator_main.py 
+
+----
+1. schema names:
+----------------
+hp_config 
+hp_stage
+hp_core 	(for core tables and views. view prefix: v_ ) 
+hp_audit
+
+
+2. table names:
+----------------
+config tables (pipe delimiter)
+*************
+2.1 hp_config.staging_to_core
+CREATE TABLE hp_config.staging_to_core(id int, source_application string, filename string,source_hdfs_path string, source_table string, target_hdfs_path string, target_table string, data_load_type string, should_add_partition int, is_active int, create_timestamp timestamp, created_by string, update_timestamp timestamp, updated_by string)ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' ;
+
+2.2 hp_config.optimization_base
+CREATE TABLE hp_config.optimization_base(id int, optimization_category string, optimization_sub_category string, optimization_name string,  parameter_format string, description string, is_active int,create_timestamp timestamp,created_by string, update_timestamp timestamp,updated_by string)ROW FORMAT DELIMITED FIELDS TERMINATED BY '|';
+
+2.3 hp_config.optimization_staging_to_core
+CREATE TABLE hp_config.optimizatation_staging_to_core(id int,table_name string,optimization_name string,parameter_value string,is_active int,create_timestamp timestamp,created_by  string,update_timestamp timestamp,updated_by string)ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' ;
+
+data tables
+***********
+(i) hp_stage.account
+CREATE EXTERNAL TABLE hp_stage.account_20230927(account_id string, district_id string, frequency string,date string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' location '/user/itv007175/datalake/stage/account/20230927/';
+(ii) hp_stage.card 
+
+
+
+
+TO DO LSIT:
+1. fix create_timestamp() in config tables 
+
+
+
+
+========================================
+
+
+table: config.optimizatation_landing_to_staging
+       config.optimizatation_staging_to_core   
+id, table_name, optimization_name, parameter_name, parameter_value, is_active, create_timestamp, update_timestamp, updated_by  
+
+
+table: config.table_columns
+id, table_name, column_name, is_primary_key, is_nullable , is_active, create_timestamp, created_by, last_update_timestamp, updated_by    
+
+
+
+table: audit.landing_to_staging
+			id, source_application,  filename_body, audit_category, status, audit_data, audit_date, audit_timestamp		
+	   audit.staging_to_core
+			id, source_application,  filename_body, audit_category, status, audit_data, audit_date, audit_timestamp			
+
+table: data.
+       curated layer:
+	   additional columns: as_of_date, modified_by, modified_timestamp,  created_by, created_timestamp 
+	   
+	   
+	   
+table_creation:
+
+
+-----basic tables:
+config.staging_to_core
+config.optimization
+optimization.staging_to_core
+audit.staging_to_core
+
+
+ /user/itv007175/stage/
+ /user/itv007175/core/ 
+ 
+ 
+ ===============
+ 
+ ---------------
+live project tasks 
+==================
+[done]1. design all the tables (count : 4 )  - done 
+[done]2. create tables  - done 
+[done]3. fill the data - done 
+4. create data tables 
+[done]5. correct the staging code to copy the file 
+
+6. spark application to read the configuraiton 
+7. apply basic cleaning 
+8. apply basic transformation 
+9. write to the target table and add the new partition 
+10. populate the audit info 
+
+11. log the details 
+---
+1. account : "account_id";"district_id";"frequency";"date"
+2. card: "card_id";"disp_id";"type";"issued"
+3.
+4.
+
+/home/itv007175/data/landing/20230927/card.csv
+/user/itv007175/datalake/stage 
+/user/itv007175/datalake/core
+
+
+subprocess.call(['hadoop fs -copyFromLocal /home/itv007175/data/landing/20230927/card.csv hdfs:///user/edwaeadt/app'], shell=True)
+
+--staging script 
+/home/itv007175/project_src/staging_data_processor   /usr/bin/python3.6 validator_main.py
+
+
+
+
+
+ |hdfs://m01.itversity.com:9000/user/itv007175/datalake/stage/account|       |
+|Serde Library               |org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe                 
+
+
+/user/itv007175/datalake/stage/account/20230927
+[itv007175@g02 ~]$ hadoop fs -ls -R /user/itv007175/datalake/stage/hadoop fs -cat /user/itv007175/datalake/stage/account/20230927
+hadoop fs -cat /user/itv007175/datalake/stage/hadoop fs -cat /user/itv007175/datalake/stage/account/20230927
+
+
+  
+hdfs://m01.itversity.com:9000/user/itv007175/datalake/stage/account/20230927/account.csv
+[itv007175@g02 ~]$ hadoop fs -head 
+
+/home/itv007175/project_src/staging_data_processor
+[itv007175@g02 staging_data_processor]$ 

@@ -1,0 +1,11 @@
+﻿1,transformation,transformation_column,add_column_with_default_value,"{new_columnname1: {after_columnname1:datatype1:defaultvalue1}}",add new column,1,current_timestamp(),system,current_timestamp(),system
+2,transformation,transformation_column,add_column_with_current_timestamp,"{new_columnname1: after_columnname1",add new column,1,current_timestamp(),system,current_timestamp(),system
+3,transformation,transformation_column,rename_column,"{old_columnname1:new_columnname1}",rename the existing column,1,current_timestamp(),system,current_timestamp(),system
+4,transformation,transformation_column,drop_column,[drop_columnnames],drop the existing column,1,current_timestamp(),system,current_timestamp(),system
+5,transformation,transformation_datatype,cast_column_type,"{columnname1:{existing_datatype1,new_datatype1}}",cast the data type of the column,1,current_timestamp(),system,current_timestamp(),system
+6,transformation,transformation_formatchange,column_format,"{columnname1:[existing datatype1, existing format1, new format1],columnname2:[existing datatype2, existing format2, new format2]}",change the column data format,1,current_timestamp(),system,current_timestamp(),system
+7,cleaning,clean_value,replace_column_value,"{columnname1:{old_value1:new_value1},columnname2:{old_value2:new_value2}}",replace the column value,1,current_timestamp(),system,current_timestamp(),system
+8,cleaning,clean_record,drop_exact_duplicate_records,,drop the duplicate records,1,current_timestamp(),system,current_timestamp(),system
+9,cleaning,clean_record,drop_records_with_column_value,"{columnname1:[value1, value2]}",drop the record(s) if the specific column has the given value,1,current_timestamp(),system,current_timestamp(),system
+10,cleaning,clean_record,filter_record_with_condition,"{columnname1:[value1, value2], columnname2:[value1, value2]}",filter the records when the given column value meet the condition,1,current_timestamp(),system,current_timestamp(),system
+11,cleaning,clean_value,capitalize_word,[columnnames],capitalize the word,1,current_timestamp(),system,current_timestamp(),system
