@@ -1,12 +1,8 @@
-from abc import ABC, abstractmethod
+#from abc import ABC, abstractmethod
 
 
-class ReaderBase(ABC):
+class ReaderBase():
 
-    @abstractmethod
-    def read_data_from_table(self, table_name):
-        raise Exception("not implemented...")
-
-    @abstractmethod
-    def read_data_from_table(self, table_name, as_of_date):
+    #@abstractmethod
+    def read_data_from_table(self, spark_session, table_name, column_names, condition):
         raise Exception("not implemented...")

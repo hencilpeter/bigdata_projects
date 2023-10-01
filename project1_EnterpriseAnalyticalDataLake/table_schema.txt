@@ -57,12 +57,17 @@ CREATE TABLE hp_config.optimization_base(id int, optimization_category string, o
 2.3 hp_config.optimization_staging_to_core
 CREATE TABLE hp_config.optimizatation_staging_to_core(id int,table_name string,optimization_name string,parameter_value string,is_active int,create_timestamp timestamp,created_by  string,update_timestamp timestamp,updated_by string)ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' ;
 
-data tables
+data tables - staging layer 
 ***********
 (i) hp_stage.account
 CREATE EXTERNAL TABLE hp_stage.account(account_id string, district_id string, frequency string,date string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/account/';
 (ii) hp_stage.card 
 
+
+data tables - core layer 
+***********
+1.hp_core.account 
+CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.account(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,account_id long ,district_id long,account_creation_date date,frequency string)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/account';
 
 
 
@@ -126,6 +131,7 @@ live project tasks
 7. apply basic cleaning 
 8. apply basic transformation 
 9. write to the target table and add the new partition 
+
 10. populate the audit info 
 
 11. log the details 
@@ -139,6 +145,15 @@ transformations:
 1. table: account , column : frequency, transformation: remove quotes 
 2. table: account , column : frequency, transformation: initcap
 3. table: account , column : date, transformation: 
+
+current:
+i. remove quotes 
+ii. remove first line 
+iii. capitialize 
+iv. date format change 
+v. add prefix columns  
+
+
 
 https://stackoverflow.com/questions/76361665/pyspark-convert-string-to-date-type
 data_sdf. \
@@ -164,6 +179,8 @@ subprocess.call(['hadoop fs -copyFromLocal /home/itv007175/data/landing/20230927
 --staging script 
 /home/itv007175/project_src/staging_data_processor   /usr/bin/python3.6 validator_main.py
 
+--core layer script 
+spark-submit core_data_processor_main.py 20230928
 
 
 
