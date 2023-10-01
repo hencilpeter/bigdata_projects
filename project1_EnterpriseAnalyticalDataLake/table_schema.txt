@@ -31,7 +31,10 @@ steps :
 3. improve the performance 
 
 /usr/bin/python3.6 validator_main.py 
-
+/usr/bin/python3.6 validator_main.py 20230927
+/usr/bin/python3.6 validator_main.py 20230928
+/usr/bin/python3.6 validator_main.py 20230929
+/usr/bin/python3.6 validator_main.py 20230930
 ----
 1. schema names:
 ----------------
@@ -57,7 +60,7 @@ CREATE TABLE hp_config.optimizatation_staging_to_core(id int,table_name string,o
 data tables
 ***********
 (i) hp_stage.account
-CREATE EXTERNAL TABLE hp_stage.account_20230927(account_id string, district_id string, frequency string,date string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' location '/user/itv007175/datalake/stage/account/20230927/';
+CREATE EXTERNAL TABLE hp_stage.account(account_id string, district_id string, frequency string,date string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/account/';
 (ii) hp_stage.card 
 
 
@@ -65,6 +68,7 @@ CREATE EXTERNAL TABLE hp_stage.account_20230927(account_id string, district_id s
 
 TO DO LSIT:
 1. fix create_timestamp() in config tables 
+2. staging layer - remove hardcoded values in main script 
 
 
 
@@ -130,6 +134,25 @@ live project tasks
 2. card: "card_id";"disp_id";"type";"issued"
 3.
 4.
+---
+transformations:
+1. table: account , column : frequency, transformation: remove quotes 
+2. table: account , column : frequency, transformation: initcap
+3. table: account , column : date, transformation: 
+
+https://stackoverflow.com/questions/76361665/pyspark-convert-string-to-date-type
+data_sdf. \
+    withColumn('new_str_dt', 
+               func.when(func.substring('str_dt', 8, 2).cast('int').between(0, 25), 
+                         func.concat(func.substring('str_dt', 1, 7), func.lit('20'), func.substring('str_dt', 8, 2))
+                         ).
+               otherwise(func.concat(func.substring('str_dt', 1, 7), func.lit('19'), func.substring('str_dt', 8, 2)))
+               ). \
+    withColumn('dt', func.to_date('new_str_dt', 'dd-MMM-yyyy')). \
+    show()
+
+
+
 
 /home/itv007175/data/landing/20230927/card.csv
 /user/itv007175/datalake/stage 

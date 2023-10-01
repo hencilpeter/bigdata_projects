@@ -34,7 +34,7 @@ class LandingFilesProcessor:
                 landing_path_and_as_of_date = os.path.join(self.landing_path, self.as_of_date)
                 exact_foldername = validation_parameters.get_filename()[len(landing_path_and_as_of_date)+1:len(control_file)-4]
                 exact_filename = validation_parameters.get_filename()[len(landing_path_and_as_of_date)+1:len(control_file)]               
-                hdfs_path_with_as_of_date = os.path.join(self.hdfs_path, exact_foldername,self.as_of_date,"")
+                hdfs_path_with_as_of_date = os.path.join(self.hdfs_path, exact_foldername,"as_of_date="+self.as_of_date,"")
                 source_filename = os.path.join(landing_path_and_as_of_date, exact_filename)
                 self.create_hdfs_folder(hdfs_path_with_as_of_date)
                 self.copy_file_to_hdfs(source_filename, hdfs_path_with_as_of_date)
