@@ -55,7 +55,8 @@ CREATE TABLE hp_config.staging_to_core(id int, source_application string, filena
 CREATE TABLE hp_config.optimization_base(id int, optimization_category string, optimization_sub_category string, optimization_name string,  parameter_format string, description string, is_active int,create_timestamp timestamp,created_by string, update_timestamp timestamp,updated_by string)ROW FORMAT DELIMITED FIELDS TERMINATED BY '|';
 
 2.3 hp_config.optimization_staging_to_core
-CREATE TABLE hp_config.optimizatation_staging_to_core(id int,table_name string,optimization_name string,parameter_value string,is_active int,create_timestamp timestamp,created_by  string,update_timestamp timestamp,updated_by string)ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' ;
+CREATE TABLE IF NOT EXISTS hp_config.optimization_staging_to_core(id int,table_name string,optimization_category
+ string,optimization_name string,parameter_value string,is_active int,create_timestamp timestamp,created_by  string,update_timestamp timestamp,updated_by string)ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' ;
 
 data tables - staging layer 
 ***********
@@ -68,6 +69,41 @@ data tables - core layer
 ***********
 1.hp_core.account 
 CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.account(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,account_id long ,district_id long,account_creation_date date,frequency string)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/account';
+
+2. client - new 
+create_table("CREATE EXTERNAL TABLE hp_stage.client(client_id string,birth_number string,district_id string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/client/' TBLPROPERTIES ('skip.header.line.count'='1');")
+
+CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.client(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,client_id long ,birth_number long,district_id long)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/client';
+
+3. disp 
+create_table("CREATE EXTERNAL TABLE hp_stage.disp(disp_id string, client_id string ,account_id string,type string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/disp/' TBLPROPERTIES ('skip.header.line.count'='1');")
+
+CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.disp(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,disp_id long, client_id long ,account_id long,type string)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/disp';
+
+4.loan
+CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.loan(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,loan_id long, account_id long,loan_creation_date date,amount double,duration long,payments double,status string)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/loan';
+ 
+hadoop fs -ls /user/itv007175/datalake/core/*/*
+hadoop fs -rm -r /user/itv007175/datalake/core/*/*
+
+5. orders 
+order_id	-> long 
+account_id	-> long 
+bank_to	-> string 
+account_to	-> long 
+amount	-> double 
+k_symbol -> "K_symbol": "payment_category"
+6. trans  -> transactions 
+trans_id	-> long 
+account_id	-> long 
+date	-> yyyy-MM-dd
+type -> string 	
+operation -> string 	
+amount	-> double 
+balance	-> double 
+k_symbol "K_symbol": "payment_category"	
+bank	-> string 
+account -> long
 
 
 
@@ -147,24 +183,92 @@ transformations:
 3. table: account , column : date, transformation: 
 
 current:
-i. remove quotes 
-ii. remove first line 
-iii. capitialize 
-iv. date format change 
-v. add prefix columns  
+[done]i. remove quotes 
+[done]ii. remove first line 
+[done]iii. capitialize 
+[done]iv. date format change 
+[done]v. add prefix columns  
+[done]i. hp_config.staging_to_core - change column values  (source_hdfs_path , target_hdfs_path )
+[done]ii. hp_config.optimization_staging_to_core - add/modify values 
+[done]iii. read hp_config.optimization_staging_to_core table  
+[done]iv. dynamic cleansing 
+v. dynamic transformation 
+vi. add new tables 
+
+transform_dateformat_yymmdd_to_yyyyMMdd
+transform_rename_column
+transform_initcap
+transform_string_to_long
+ 
+
+1. card 
+   card_id-> long	
+   disp_id ->long	
+   type	 -> intcap 
+[new]issued - timestamp(
+2. client - used 
+   client_id	 -> long
+   birth_number	 -> long 
+   district_id   -> long 
+   
+3. disp 
+disp_id	 -> long 
+client_id -> long 	
+account_id-> long 	
+type -> string 
+4.loan 
+loan_id -> long 
+account_id	-> long 
+date	->yyyy-MM-dd
+amount	-> double 
+duration -> long 	
+payments -> double 	
+status -> string 
+5. orders 
+order_id	-> long 
+account_id	-> long 
+bank_to	-> string 
+account_to	-> long 
+amount	-> double 
+k_symbol -> "K_symbol": "payment_category"
+6. trans  -> transactions 
+trans_id	-> long 
+account_id	-> long 
+date	-> yyyy-MM-dd
+type -> string 	
+operation -> string 	
+amount	-> double 
+balance	-> double 
+k_symbol "K_symbol": "payment_category"	
+bank	-> string 
+account -> long 
+
+7. distict 
+A1	-> district_id -> long 
+A2	-> district_name -> string 
+A3	-> region -> string 
+A4	-> inhabitants_count -> long 
+A5	->  inhabitants_count_lessthan_400 -> long 
+A6	->  inhabitants_count_bet_500_1999 -> long 
+A7	->  inhabitants_count_bet_2000_9999 -> long 
+A8	->  inhabitants_count_abive_10000 -> long 
+A9	-> cities_count -> long 
+A10	-> urban_inhabitants_ratio -> double 
+A11	-> average_salary -> double 
+A12	-> unemployment_rate_1995 -> double 
+A13	-> unemployment_rate_1996 -> double 
+A14	-> entre_per_1000_inhabitants -> long 
+A15	-> crimes_commited_1995 -> long 
+A16 -> crimes_commited_1996 -> long 
 
 
 
-https://stackoverflow.com/questions/76361665/pyspark-convert-string-to-date-type
-data_sdf. \
-    withColumn('new_str_dt', 
-               func.when(func.substring('str_dt', 8, 2).cast('int').between(0, 25), 
-                         func.concat(func.substring('str_dt', 1, 7), func.lit('20'), func.substring('str_dt', 8, 2))
-                         ).
-               otherwise(func.concat(func.substring('str_dt', 1, 7), func.lit('19'), func.substring('str_dt', 8, 2)))
-               ). \
-    withColumn('dt', func.to_date('new_str_dt', 'dd-MMM-yyyy')). \
-    show()
+
+
+
+
+
+           
 
 
 
@@ -200,3 +304,6 @@ hdfs://m01.itversity.com:9000/user/itv007175/datalake/stage/account/20230927/acc
 
 /home/itv007175/project_src/staging_data_processor
 [itv007175@g02 staging_data_processor]$ 
+
+AttributeError: 'NoneType' object has no attribute 'setCallSite'
+[itv007175@g02 core_data_processor]$ 

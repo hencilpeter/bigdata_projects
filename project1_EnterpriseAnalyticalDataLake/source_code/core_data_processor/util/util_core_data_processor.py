@@ -2,10 +2,8 @@ from pyspark.sql import SparkSession
 import getpass
 
 from reader.reader_csv_as_dataframe import ReaderCSVasDataframe
-from cleanse.cleanse_data import CleanseData
-from transform.transform_column import TransformColumn
-from transform.transform_datatype import TransformDatatype
-from transform.transform_date_format import TransformDateFormat
+from cleanse.cleanse_manager import CleanseManager
+from transform.transformation_manager import TransformationManager
 from writer.writer_parquet_format import WriterParquetFormat
 from util.util_hive_table import UtilHiveTable
 
@@ -22,55 +20,46 @@ class UtilCoreDataProcessor:
         #1. initialize spark session 
         self.init_spark()
         reader = ReaderCSVasDataframe()
-        cleanser = CleanseData()
-        transformation_date = TransformDateFormat()
-        transformation_datatype = TransformDatatype()
-        transformation_column = TransformColumn()
+        cleanse_manager = CleanseManager()
+        transformation_manager = TransformationManager()
         writer_parquet = WriterParquetFormat()
         util_hive_table = UtilHiveTable()
         
         
         # read the configuration 
         # TODO - remove hardcoding 
-        columns_staging_to_core = "filename, source_hdfs_path, source_table, target_hdfs_path, target_table, data_load_type, should_add_partition"
-        condition_staging_to_core = "is_active=1"
+        columns_config_staging_to_core = "filename, source_hdfs_path, source_table, target_hdfs_path, target_table, data_load_type, should_add_partition"
+        condition = "is_active=1"
+        columns_optimize_staging_to_core = "table_name,optimization_category,optimization_name,parameter_value,is_active"
         
-        df_configuration= reader.read_data_from_table(spark_session=self.spark, table_name="hp_config.staging_to_core",  column_names=columns_staging_to_core, condition= condition_staging_to_core)
-        for row in df_configuration.collect():
-            #print(row["source_table"], row["target_hdfs_path"], row["source_table"], row["target_table"])
-            if row["filename"] == "account":
+        
+        df_config_staging_to_core= reader.read_data_from_table(spark_session=self.spark, table_name="hp_config.staging_to_core",  column_names=columns_config_staging_to_core, condition= condition)
+        df_optimize_staging_to_core = reader.read_data_from_table(spark_session=self.spark, table_name="hp_config.optimization_staging_to_core",  column_names=columns_optimize_staging_to_core, condition= condition)
+        
+        for row in df_config_staging_to_core.collect():
+            #if row["filename"] == "account":
+            if row["filename"] == "client":
+                column_names = util_hive_table.get_table_column_names(self.spark, row["target_table"])
                 # read staged data 
                 df_stage_data= reader.read_data_from_table(spark_session=self.spark, table_name=row["source_table"],  column_names="*", condition="as_of_date="+as_of_data)
-                # print(df_stage_data.show())
+                df_stage_data.show(truncate=False)
                 
-                # apply cleansing 
-                df_header_cleansed = cleanser.cleanse_remove_row_when_header_column0_and_value_equal(df_stage_data)
-                df_double_quote_cleansed = cleanser.cleanse_remove_double_quotes(df_header_cleansed, "frequency")
+                # cleansing
+                df_cleaned_data = cleanse_manager.cleanse_dataframe(df_stage_data, row["target_table"], df_optimize_staging_to_core)
+                df_cleaned_data.show(truncate=False)
                 
-                # apply transformation 
-                df_transform = transformation_date.transform_dateformat_yymmdd_to_yyyyMMdd(df_double_quote_cleansed, "date")
-                df_transform = transformation_column.transform_rename_column(df_transform, "date", "account_creation_date")
-                df_transform = transformation_column.transform_initcap(df_transform, "frequency")
-                df_transform = transformation_column.transform_append_column_with_default_value(df_transform, 'created_by', 'system')
-                df_transform = transformation_column.transform_append_column_with_default_value(df_transform, 'create_timestamp', 'CURRENT_TIMESTAMP')
-                df_transform = transformation_column.transform_append_column_with_default_value(df_transform, 'updated_by', 'system')
-                df_transform = transformation_column.transform_append_column_with_default_value(df_transform, 'update_timestamp', 'CURRENT_TIMESTAMP')
+                # tranformation 
+                df_transformed_data = transformation_manager.transform_dataframe(df_cleaned_data, row["target_table"], df_optimize_staging_to_core)
+                df_transformed_data.show(truncate=False)
+                df_transformed_data.printSchema()
                 
-                df_transform = transformation_datatype.transform_string_to_long(df_transform, 'account_id')
-                df_transform = transformation_datatype.transform_string_to_long(df_transform, 'district_id')
-                df_transform = transformation_datatype.transform_string_to_long(df_transform, 'as_of_date')           
-                print(df_transform.show(truncate=False))
-                print(df_transform.printSchema())
-                       
-                #write the final clean data 
-                column_names = ["as_of_date", "created_by","create_timestamp","updated_by","update_timestamp","account_id","district_id","account_creation_date","frequency"]
+                #write the transformed data 
                 partition_column = "as_of_date"
-                hdfs_path = "/user/itv007175/datalake/core/account/"
-                writer_parquet.write_dataframe(df_transform, column_names, partition_column, hdfs_path)
+                #writer_parquet.write_dataframe(df_transformed_data, column_names, partition_column, row["target_hdfs_path"])
                 
                 # add new partition 
-                util_hive_table.add_partition(self.spark, row["target_table"],"as_of_date='{}'".format(as_of_data))
-
+                #util_hive_table.add_partition(self.spark, row["target_table"],"as_of_date='{}'".format(as_of_data))
+               
             #stop the session 
             self.spark.stop()
         

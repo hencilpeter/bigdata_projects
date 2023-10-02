@@ -1,0 +1,8 @@
+﻿1|SecureAccount|account|/user/itv007175/stage/account|hp_stage.account|/user/itv007175/core/account|hp_core.account|FULL|1|1|current_timestamp()|system|current_timestamp()|system
+2|SecureCredit|card|/user/itv007175/stage/card|hp_stage.card|/user/itv007175/core/card|hp_core.card|FULL|1|1|current_timestamp()|system|current_timestamp()|system
+3|CRM|client|/user/itv007175/stage/client|hp_stage.client|/user/itv007175/core/client|hp_core.client|FULL|1|1|current_timestamp()|system|current_timestamp()|system
+4|PrimeApp|disp|/user/itv007175/stage/disp|hp_stage.disp|/user/itv007175/core/disp|hp_core.disp|FULL|1|1|current_timestamp()|system|current_timestamp()|system
+5|PrimeApp|district|/user/itv007175/stage/district|hp_stage.district|/user/itv007175/core/district|hp_core.district|FULL|1|1|current_timestamp()|system|current_timestamp()|system
+6|SecureLoan|loan|/user/itv007175/stage/loan|hp_stage.loan|/user/itv007175/core/loan|hp_core.loan|FULL|1|1|current_timestamp()|system|current_timestamp()|system
+7|SecureOrder|orders|/user/itv007175/stage/orders|hp_stage.orders|/user/itv007175/core/orders|hp_core.orders|FULL|1|1|current_timestamp()|system|current_timestamp()|system
+8|SecureTransactions|trans|/user/itv007175/stage/trans|hp_stage.trans|/user/itv007175/core/trans|hp_core.trans|FULL|1|1|current_timestamp()|system|current_timestamp()|system

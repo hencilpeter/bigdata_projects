@@ -14,7 +14,7 @@ CREATE TABLE  IF NOT EXISTS hp_config.staging_to_core(id int, source_application
 CREATE TABLE  IF NOT EXISTS hp_config.optimization(id int, optimization_category string, optimization_sub_category	string, optimization_name	string, description	string, is_active	int,create_timestamp timestamp, created_by	string	,update_timestamp timestamp, updated_by string) STORED AS PARQUET PARTITIONED BY (optimization_category);
 
 
-3. optimization.taging_to_core
+3. optimization.staging_to_core
 ==============================
 CREATE TABLE  IF NOT EXISTS hp_optimization.staging_to_core(id int,table_name	string,optimization_name string,parameter_name string,parameter_value string,is_active int ,create_timestamp timestamp,created_by  string,update_timestamp timestamp,updated_by string) STORED AS PARQUET  PARTITIONED BY(table_name);
 

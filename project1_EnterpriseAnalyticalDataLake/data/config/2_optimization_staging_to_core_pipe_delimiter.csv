@@ -5,6 +5,3 @@
 5|hp_core.account|transformation|transform_rename_column|{'date': 'account_creation_date'}|1|current_timestamp()|system|current_timestamp()|system
 6|hp_core.account|transformation|transform_initcap|[frequency]|1|current_timestamp()|system|current_timestamp()|system
 7|hp_core.account|transformation|transform_string_to_long|[account_id,district_id,as_of_date]|1|current_timestamp()|system|current_timestamp()|system
-8|hp_core.client|cleansing|cleanse_remove_row_when_header_column0_and_value_equal||1|current_timestamp()|system|current_timestamp()|system
-9|hp_core.client|cleansing|cleanse_remove_duplicate_rows||1|current_timestamp()|system|current_timestamp()|system
-10|hp_core.client|transformation|transform_string_to_long|[client_id,birth_number,district_id]|1|current_timestamp()|system|current_timestamp()|system
