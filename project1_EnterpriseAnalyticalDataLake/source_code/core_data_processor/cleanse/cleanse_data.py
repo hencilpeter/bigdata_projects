@@ -12,6 +12,6 @@ class CleanseData:
     def cleanse_remove_double_quotes(self, dataframe, list_column_name):
         df_res = dataframe
         for column_name in list_column_name:
-            df_res = dataframe.withColumn(column_name, f.regexp_replace(f.col(column_name), '"', ''))
+            df_res = df_res.withColumn(column_name, f.regexp_replace(f.col(column_name), '"', ''))
         return df_res
     

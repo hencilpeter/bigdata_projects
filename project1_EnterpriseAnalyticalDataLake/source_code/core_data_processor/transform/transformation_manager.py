@@ -19,6 +19,9 @@ class TransformationManager():
             if row["optimization_name"] == "transform_dateformat_yymmdd_to_yyyyMMdd":
                 list_parameter_value = str(str(row["parameter_value"]).replace("[","" ).replace("]","")).split(",")
                 transformation_dataframe = self.transformation_date.transform_dateformat_yymmdd_to_yyyyMMdd(transformation_dataframe, list_parameter_value)
+            elif row["optimization_name"] == "transform_timestampformat_yymmdd_mmssms_to_yyyymmdd_mmssms":
+                list_parameter_value = str(str(row["parameter_value"]).replace("[","" ).replace("]","")).split(",")
+                transformation_dataframe = self.transformation_date.transform_timestampformat_yymmdd_mmssms_to_yyyymmdd_mmssms(transformation_dataframe, list_parameter_value)
             elif row["optimization_name"] == "transform_rename_column":
                 parameter_value = str(row["parameter_value"]).replace("'", '"')
                 dict_parameter_value = json.loads(parameter_value) 
@@ -35,6 +38,7 @@ class TransformationManager():
                 list_parameter_value =  [str(item.strip()) for item in list_parameter_value]                   
                 transformation_dataframe = self.transformation_datatype.transform_string_to_double(transformation_dataframe, list_parameter_value) 
                 
+        transformation_dataframe = self.transformation_datatype.transform_string_to_long(transformation_dataframe, ['as_of_date'])         
         transformation_dataframe = self.get_special_columns_datataframe(transformation_dataframe)
         return transformation_dataframe
 

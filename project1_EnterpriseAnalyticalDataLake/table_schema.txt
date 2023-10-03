@@ -81,30 +81,59 @@ create_table("CREATE EXTERNAL TABLE hp_stage.disp(disp_id string, client_id stri
 CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.disp(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,disp_id long, client_id long ,account_id long,type string)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/disp';
 
 4.loan
-CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.loan(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,loan_id long, account_id long,loan_creation_date date,amount double,duration long,payments double,status string)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/loan';
- 
-hadoop fs -ls /user/itv007175/datalake/core/*/*
-hadoop fs -rm -r /user/itv007175/datalake/core/*/*
+create_table("CREATE EXTERNAL TABLE hp_stage.loan(loan_id string, account_id string,date string,amount string,duration string,payments string,status string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/loan/' TBLPROPERTIES ('skip.header.line.count'='1');")
+
+
+create_table("CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.loan(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,loan_id long, account_id long,loan_creation_date date,amount double,duration long,payments double,status string)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/loan';")
 
 5. orders 
-order_id	-> long 
-account_id	-> long 
-bank_to	-> string 
-account_to	-> long 
-amount	-> double 
-k_symbol -> "K_symbol": "payment_category"
-6. trans  -> transactions 
-trans_id	-> long 
-account_id	-> long 
-date	-> yyyy-MM-dd
-type -> string 	
-operation -> string 	
-amount	-> double 
-balance	-> double 
-k_symbol "K_symbol": "payment_category"	
-bank	-> string 
-account -> long
+create_table("CREATE EXTERNAL TABLE hp_stage.orders(order_id string,account_id string,bank_to string,account_to string,amount string,k_symbol string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/orders/' TBLPROPERTIES ('skip.header.line.count'='1');")
 
+create_table("CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.orders(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,order_id long,account_id long,bank_to string,account_to long,amount double,payment_category string)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/orders';")
+
+6. trans
+create_table("CREATE EXTERNAL TABLE hp_stage.trans(trans_id string, account_id string,date string,type string, operation string, amount string, balance string,k_symbol string,bank string,account string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/trans/' TBLPROPERTIES ('skip.header.line.count'='1');")
+
+create_table("CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.trans(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,trans_id long, account_id long,transaction_date date,type string, operation string, amount double, balance double,payment_category string,bank string,account long)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/trans';")
+
+7. district
+create_table("CREATE EXTERNAL TABLE hp_stage.district(A1 string,A2 string,A3 string,A4 string,A5 string,A6 string,A7 string,A8 string,A9 string,A10 string,A11 string,A12 string,A13 string,A14 string,A15 string,A16  string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/district/' TBLPROPERTIES ('skip.header.line.count'='1');")
+
+create_table("CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.district(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,district_id long, district_name string, region string, inhabitants_count long,inhabitants_count_lessthan_400 long, inhabitants_count_bet_500_1999 long, inhabitants_count_bet_2000_9999 long, inhabitants_count_abive_10000 long, cities_count long, urban_inhabitants_ratio double, average_salary long, unemployment_rate_1995 double, unemployment_rate_1996 double, entre_per_1000_inhabitants long, crimes_commited_1995 long, crimes_commited_1996 long)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/district';")
+
+8.card 
+create_table("CREATE EXTERNAL TABLE hp_stage.card(card_id string,disp_id string,type string,issued string) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' PARTITIONED BY(as_of_date string) location '/user/itv007175/datalake/stage/card/' TBLPROPERTIES ('skip.header.line.count'='1');")
+
+create_table("CREATE EXTERNAL TABLE IF NOT EXISTS hp_core.card(created_by string,create_timestamp timestamp ,updated_by string ,update_timestamp timestamp,card_id long,disp_id long,type string,issued_timestamp timestamp)STORED AS PARQUET PARTITIONED BY(as_of_date long) LOCATION '/user/itv007175/datalake/core/card';")
+
+
+
+
+
+
+A1	-> district_id -> long 
+A2	-> district_name -> string 
+A3	-> region -> string 
+A4	-> inhabitants_count -> long 
+A5	->  inhabitants_count_lessthan_400 -> long 
+A6	->  inhabitants_count_bet_500_1999 -> long 
+A7	->  inhabitants_count_bet_2000_9999 -> long 
+A8	->  inhabitants_count_abive_10000 -> long 
+A9	-> cities_count -> long 
+A10	-> urban_inhabitants_ratio -> double 
+A11	-> average_salary -> double | long 
+A12	-> unemployment_rate_1995 -> double 
+A13	-> unemployment_rate_1996 -> double 
+A14	-> entre_per_1000_inhabitants -> long 
+A15	-> crimes_commited_1995 -> long 
+A16 -> crimes_commited_1996 -> long 
+
+
+====================
+
+
+hadoop fs -ls /user/itv007175/datalake/core/*/*
+hadoop fs -rm -r /user/itv007175/datalake/core/*/*
 
 
 TO DO LSIT:

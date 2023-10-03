@@ -7,4 +7,43 @@
 7|hp_core.account|transformation|transform_string_to_long|[account_id,district_id,as_of_date]|1|current_timestamp()|system|current_timestamp()|system
 8|hp_core.client|cleansing|cleanse_remove_row_when_header_column0_and_value_equal||1|current_timestamp()|system|current_timestamp()|system
 9|hp_core.client|cleansing|cleanse_remove_duplicate_rows||1|current_timestamp()|system|current_timestamp()|system
-10|hp_core.client|transformation|transform_string_to_long|[client_id,birth_number,district_id]|1|current_timestamp()|system|current_timestamp()|system
+10|hp_core.client|cleansing|cleanse_remove_double_quotes|[birth_number]|1|current_timestamp()|system|current_timestamp()|system
+11|hp_core.client|transformation|transform_string_to_long|[client_id,birth_number,district_id]|1|current_timestamp()|system|current_timestamp()|system
+12|hp_core.disp|cleansing|cleanse_remove_row_when_header_column0_and_value_equal||1|current_timestamp()|system|current_timestamp()|system
+13|hp_core.disp|cleansing|cleanse_remove_duplicate_rows||1|current_timestamp()|system|current_timestamp()|system
+14|hp_core.disp|cleansing|cleanse_remove_double_quotes|[type]|1|current_timestamp()|system|current_timestamp()|system
+15|hp_core.disp|transformation|transform_initcap|[type]|1|current_timestamp()|system|current_timestamp()|system
+16|hp_core.disp|transformation|transform_string_to_long|[disp_id,client_id,account_id]|1|current_timestamp()|system|current_timestamp()|system
+17|hp_core.loan|cleansing|cleanse_remove_row_when_header_column0_and_value_equal||1|current_timestamp()|system|current_timestamp()|system
+18|hp_core.loan|cleansing|cleanse_remove_duplicate_rows||1|current_timestamp()|system|current_timestamp()|system
+19|hp_core.loan|cleansing|cleanse_remove_double_quotes|[status]|1|current_timestamp()|system|current_timestamp()|system
+20|hp_core.loan|transformation|transform_dateformat_yymmdd_to_yyyyMMdd|[date]|1|current_timestamp()|system|current_timestamp()|system
+21|hp_core.loan|transformation|transform_rename_column|{'date': 'loan_creation_date'}|1|current_timestamp()|system|current_timestamp()|system
+22|hp_core.loan|transformation|transform_string_to_long|[loan_id,account_id,duration]|1|current_timestamp()|system|current_timestamp()|system
+23|hp_core.loan|transformation|transform_string_to_double|[amount,payments]|1|current_timestamp()|system|current_timestamp()|system
+24|hp_core.orders|cleansing|cleanse_remove_row_when_header_column0_and_value_equal||1|current_timestamp()|system|current_timestamp()|system
+25|hp_core.orders|cleansing|cleanse_remove_duplicate_rows||1|current_timestamp()|system|current_timestamp()|system
+26|hp_core.orders|cleansing|cleanse_remove_double_quotes|[bank_to,account_to,k_symbol]|1|current_timestamp()|system|current_timestamp()|system
+27|hp_core.orders|transformation|transform_string_to_long|[order_id, account_id, account_to]|1|current_timestamp()|system|current_timestamp()|system
+28|hp_core.orders|transformation|transform_string_to_double|[amount]|1|current_timestamp()|system|current_timestamp()|system
+29|hp_core.orders|transformation|transform_rename_column|{'k_symbol':'payment_category'}|1|current_timestamp()|system|current_timestamp()|system
+30|hp_core.trans|cleansing|cleanse_remove_row_when_header_column0_and_value_equal||1|current_timestamp()|system|current_timestamp()|system
+31|hp_core.trans|cleansing|cleanse_remove_duplicate_rows||1|current_timestamp()|system|current_timestamp()|system
+32|hp_core.trans|cleansing|cleanse_remove_double_quotes|[type,operation,k_symbol,bank,account]|1|current_timestamp()|system|current_timestamp()|system
+33|hp_core.trans|transformation|transform_string_to_long|[trans_id,account_id,account]|1|current_timestamp()|system|current_timestamp()|system
+34|hp_core.trans|transformation|transform_dateformat_yymmdd_to_yyyyMMdd|[date]|1|current_timestamp()|system|current_timestamp()|system
+35|hp_core.trans|transformation|transform_rename_column|{'date': 'transaction_date'}|1|current_timestamp()|system|current_timestamp()|system
+36|hp_core.trans|transformation|transform_string_to_double|[amount,balance]|1|current_timestamp()|system|current_timestamp()|system
+37|hp_core.trans|transformation|transform_rename_column|{'k_symbol':'payment_category'}|1|current_timestamp()|system|current_timestamp()|system
+38|hp_core.district|cleansing|cleanse_remove_row_when_header_column0_and_value_equal||1|current_timestamp()|system|current_timestamp()|system
+39|hp_core.district|cleansing|cleanse_remove_duplicate_rows||1|current_timestamp()|system|current_timestamp()|system
+40|hp_core.district|cleansing|cleanse_remove_double_quotes|[A2,A3]|1|current_timestamp()|system|current_timestamp()|system
+41|hp_core.district|transformation|transform_string_to_long|[A1,A4,A5,A6,A7,A8,A9,A11,A14,A15,A16]|1|current_timestamp()|system|current_timestamp()|system
+42|hp_core.district|transformation|transform_string_to_double|[A10,A12,A13]|1|current_timestamp()|system|current_timestamp()|system
+43|hp_core.district|transformation|transform_rename_column|{'A1':'district_id','A2':'district_name','A3':'region','A4':'inhabitants_count','A5':'inhabitants_count_lessthan_400','A6':'inhabitants_count_bet_500_1999','A7':'inhabitants_count_bet_2000_9999','A8':'inhabitants_count_abive_10000','A9':'cities_count','A10':'urban_inhabitants_ratio','A11':'average_salary','A12':'unemployment_rate_1995','A13':'unemployment_rate_1996','A14':'entre_per_1000_inhabitants','A15':'crimes_commited_1995','A16':'crimes_commited_1996'}|1|current_timestamp()|system|current_timestamp()|system
+44|hp_core.card|cleansing|cleanse_remove_row_when_header_column0_and_value_equal||1|current_timestamp()|system|current_timestamp()|system
+45|hp_core.card|cleansing|cleanse_remove_duplicate_rows||1|current_timestamp()|system|current_timestamp()|system
+46|hp_core.card|cleansing|cleanse_remove_double_quotes|[type]|1|current_timestamp()|system|current_timestamp()|system
+47|hp_core.card|transformation|transform_string_to_long|[card_id,disp_id]|1|current_timestamp()|system|current_timestamp()|system
+48|hp_core.card|transformation|transform_timestampformat_yymmdd_mmssms_to_yyyymmdd_mmssms|[issued]|1|current_timestamp()|system|current_timestamp()|system
+49|hp_core.card|transformation|transform_rename_column|{'issued':'issued_timestamp'}|1|current_timestamp()|system|current_timestamp()|system
