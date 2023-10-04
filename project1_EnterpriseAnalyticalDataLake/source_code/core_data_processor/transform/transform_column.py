@@ -21,11 +21,3 @@ class TransformColumn:
             dataframe = dataframe.withColumn(column_name,
                                              f.current_timestamp() if default_value == 'CURRENT_TIMESTAMP' else f.lit(default_value))
         return dataframe
-
-    
-#     def transform_append_column_with_default_value(self, dataframe, column_name, default_value):
-#         df_res = dataframe
-#         dataframe = dataframe.withColumn(column_name,
-#                                          f.current_timestamp() if default_value == 'CURRENT_TIMESTAMP' else f.lit(
-#                                              default_value))
-#         return dataframe
