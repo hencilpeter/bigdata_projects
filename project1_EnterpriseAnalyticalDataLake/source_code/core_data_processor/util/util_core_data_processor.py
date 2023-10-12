@@ -34,14 +34,6 @@ class UtilCoreDataProcessor:
         df_config_staging_to_core= reader.read_data_from_table(spark_session=self.spark, table_name="hp_config.staging_to_core",  column_names=columns_config_staging_to_core, condition= condition)
         df_optimize_staging_to_core = reader.read_data_from_table(spark_session=self.spark, table_name="hp_config.optimization_staging_to_core",  column_names=columns_optimize_staging_to_core, condition= condition)
         for row in df_config_staging_to_core.collect():
-            #if row["filename"] == "account":
-            #if row["filename"] == "client":  
-            #if row["filename"] == "disp":
-            #if row["filename"] == "loan":
-            #if row["filename"] == "orders":
-            #if row["filename"] == "trans":
-            #if row["filename"] == "district":
-            #if row["filename"] == "card":
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print("process started for the table:{}.".format(row["target_table"]))
             # refresh the source table 
